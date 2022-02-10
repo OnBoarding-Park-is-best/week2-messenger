@@ -12,27 +12,26 @@ const MainContainer = ({
   height = '50vh',
   children,
 }: MainContainerProps) => {
-  return (
-    <Container width={width} height={height}>
-      {children}
-    </Container>
-  );
+  return <Container size={{ width, height }}>{children}</Container>;
 };
 
 interface ContainerProps {
-  width: string;
-  height: string;
+  size: {
+    width: string;
+    height: string;
+  };
 }
 
 const Container = styled.main<ContainerProps>`
-  width: ${({ width }) => width};
-  height: ${({ height }) => height};
+  width: ${({ size }) => size.width};
+  height: ${({ size }) => size.height};
   padding: 12px;
   border-radius: 12px;
   box-shadow: 8px 42px 80px rgba(0, 0, 0, 0.1);
 
   @media screen and (max-width: 767px) {
     width: 100%;
+    height: 100vh;
     box-shadow: none;
   }
 `;

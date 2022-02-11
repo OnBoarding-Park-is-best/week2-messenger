@@ -1,4 +1,4 @@
-// import React, { useState } from 'react';
+import { useState } from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import Input from './Input';
 
@@ -7,22 +7,30 @@ export default {
   component: Input,
 } as ComponentMeta<typeof Input>;
 
-const Template: ComponentStory<typeof Input> = (args) => <Input {...args} />;
+const Template: ComponentStory<typeof Input> = ({ error = false }) => {
+  const [value, setValue] = useState<string>('');
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
+  };
+  return (
+    <Input
+      width={320}
+      height={52}
+      name="Login Input"
+      value={value}
+      onChange={(e) => handleChange(e)}
+      error={error}
+    />
+  );
+};
 
 export const Default = Template.bind({});
 Default.args = {
-  width: 320,
-  height: 52,
-  onChange: () => {},
-  name: 'Login Input',
   error: false,
 };
 
 export const Error = Template.bind({});
 Error.args = {
-  width: 320,
-  height: 52,
-  onChange: () => {},
-  name: 'Login Input',
   error: true,
 };

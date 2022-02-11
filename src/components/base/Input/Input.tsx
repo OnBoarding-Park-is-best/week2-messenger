@@ -5,6 +5,7 @@ interface InputProps {
   height: number;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   name: string;
+  value: string;
   error: boolean;
 }
 
@@ -13,6 +14,7 @@ const Input = ({
   height,
   onChange,
   name,
+  value,
   error,
   ...props
 }: InputProps) => {
@@ -33,6 +35,7 @@ const Input = ({
       height={height}
       onChange={onChange}
       name={name}
+      value={value}
       className={status || undefined}
       style={{ ...inputStyle }}
       {...props}
@@ -43,7 +46,7 @@ const Input = ({
 const InputContainer = styled.input`
   display: block;
   box-sizing: border-box;
-  padding: 0 16px; //
+  padding: 0 16px;
   border-radius: 12px;
   border: 1px solid #3e72f6;
   font-size: 16px;

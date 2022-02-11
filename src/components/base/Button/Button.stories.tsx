@@ -8,11 +8,11 @@ export default {
 
 const Template: ComponentStory<typeof Button> = ({
   children,
-  fill,
+  contained,
   onClick,
 }) => {
   return (
-    <Button fill={fill} onClick={onClick}>
+    <Button contained={contained} onClick={onClick}>
       {children}
     </Button>
   );
@@ -21,20 +21,20 @@ const Template: ComponentStory<typeof Button> = ({
 export const Profile = Template.bind({});
 Profile.args = {
   children: '프로필 사진 변경',
-  fill: 0,
+  contained: false,
   onClick: () => {},
 };
 
 export const Confirm = Template.bind({});
 Confirm.args = {
   children: '확인',
-  fill: 1,
+  contained: true,
   onClick: () => {},
 };
 
 export const Exit = Template.bind({});
 Exit.args = {
   children: '나가기',
-  fill: 0,
+  contained: false,
   onClick: () => {},
 };

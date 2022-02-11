@@ -4,15 +4,15 @@ import styled, { css } from 'styled-components';
 
 interface ButtonProps {
   children: ReactChild;
-  fill: number;
+  contained: boolean;
   onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-const Button = ({ children, fill, onClick, ...props }: ButtonProps) => {
+const Button = ({ children, contained, onClick, ...props }: ButtonProps) => {
   return (
     <StyledButton
       type="button"
-      fill={fill ? 1 : 0}
+      contained={contained}
       onClick={onClick}
       {...props}
     >
@@ -36,7 +36,7 @@ const StyledButton = styled.button<ButtonProps>`
   cursor: pointer;
   overflow: hidden;
   ${(props) =>
-    props.fill
+    props.contained
       ? css`
           background-color: ${COLORS.PRIMARY};
           color: ${COLORS.WHITE};
@@ -48,7 +48,7 @@ const StyledButton = styled.button<ButtonProps>`
     transition: all 0.1s ease-in;
     box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.2);
     ${(props) =>
-      props.fill
+      props.contained
         ? css`
             background-color: ${COLORS.PRIMARY_STRONG};
             color: ${COLORS.WHITE};
@@ -59,7 +59,7 @@ const StyledButton = styled.button<ButtonProps>`
   }
   &:active {
     ${(props) =>
-      props.fill
+      props.contained
         ? css`
             background-color: #3b61bf;
             box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.4),

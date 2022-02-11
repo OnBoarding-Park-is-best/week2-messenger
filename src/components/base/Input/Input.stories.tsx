@@ -15,8 +15,8 @@ const Template: ComponentStory<typeof Input> = ({ error = false }) => {
   };
   return (
     <Input
-      width={320}
-      height={52}
+      width="320px"
+      height="52px"
       name="Login Input"
       value={value}
       onChange={handleChange}

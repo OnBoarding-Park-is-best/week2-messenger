@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
 interface InputProps {
-  width: number;
-  height: number;
+  width: string;
+  height: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   name: string;
   value: string;

@@ -1,13 +1,18 @@
-import { useCallback, useRef, useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootStateType } from '~store/reducers';
 import { closeModal, showModal } from '~store/actions/modal';
 import { deleteMessage } from '~store/actions/message';
-import { ellipsisString } from '~utils/message';
+import {
+  ellipsisString,
+  removeSpecialCharacters,
+  getOriginMessage,
+} from '~utils/message';
 
 const useMessage = () => {
   const dispatch = useDispatch();
-  const state = useSelector((state: RootStateType) => state.modal);
+  const { user } = useSelector((state: RootStateType) => state.user);
+  const [chatMessage, setChatMessage] = useState<string>('');
 
   const handleDelete = useCallback(
     (e: React.MouseEvent) => {
@@ -35,14 +40,34 @@ const useMessage = () => {
     [dispatch],
   );
 
-  const handleReply = useCallback(() => {
-    // TODO: Message 상위 컴포넌트에서 구현 필요
-    console.log('Reply clicked');
-  }, []);
+  const handleReply = useCallback(
+    (e: React.MouseEvent) => {
+      const container: HTMLDivElement = (e.target as HTMLElement).closest(
+        '[data-message-id]',
+      )!;
+      const messageContainer: HTMLDivElement =
+        container.querySelector('[data-is-message]')!;
+      const nameContainer: HTMLSpanElement =
+        container.querySelector('[data-user-naem]')!;
+
+      const userName: string =
+        removeSpecialCharacters(nameContainer.innerText) === user.userName
+          ? '나'
+          : removeSpecialCharacters(nameContainer.innerText);
+      const message: string = getOriginMessage(messageContainer.innerText);
+
+      setChatMessage(
+        `${userName}에게 답장\n${ellipsisString(message)}\n(회신)\n`,
+      );
+    },
+    [user],
+  );
 
   return {
     handleDelete,
     handleReply,
+    chatMessage,
+    setChatMessage,
   };
 };
 

@@ -22,10 +22,19 @@ const Message = ({ message, me = false, onReply, onDelete }: MessageProps) => {
         </AvatarContainer>
         <Wrapper>
           <p>
-            <NameContainer>{`${me ? '*' : ''}${userName}`}</NameContainer>
+            <NameContainer data-user-naem={userName}>{`${
+              me ? '*' : ''
+            }${userName}`}</NameContainer>
             <DateContainer>{dateToFormattedString(date)}</DateContainer>
           </p>
-          <MessageContainer data-is-message={true}>{content}</MessageContainer>
+          <MessageContainer data-is-message={true}>
+            {content.split('\n').map((text, idx) => (
+              <React.Fragment key={idx}>
+                {text}
+                <br />
+              </React.Fragment>
+            ))}
+          </MessageContainer>
           <ButtonContainer>
             <Icon name="reply" size={16} onClick={onReply} />
             <Icon name="delete" size={12} onClick={onDelete} />

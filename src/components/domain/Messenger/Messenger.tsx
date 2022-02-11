@@ -17,24 +17,22 @@ import {
 } from '~components/base';
 import { Message, Modal } from '~components/domain';
 import { COLORS } from '~constants/style';
-import styled, {
-  css,
-  FlattenSimpleInterpolation,
-  keyframes,
-} from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 
 interface MessengerType {
   loginUser: UserType;
 }
 
+// 유저를 입력받으면 로그인
 const Messenger = ({ loginUser }: MessengerType) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state: RootStateType) => state.user);
   const { messages } = useSelector((state: RootStateType) => state.messages);
-  const { handleDelete, handleReply } = useMessage();
+  const { handleDelete, handleReply, chatMessage, setChatMessage } =
+    useMessage();
 
   const [chatFormStyle, setChatFormStyle] = useState<boolean>(false);
-  const [chatMessage, setChatMessage] = useState<string>('');
+  // const [chatMessage, setChatMessage] = useState<string>('');
   const chatContainer = useRef<HTMLDivElement>(null);
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,6 +41,7 @@ const Messenger = ({ loginUser }: MessengerType) => {
 
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    // 제출할 때 보내는 메세지, 로그인 시에 유저 정보만 따로 업데이트 하는 게 좋을지?
     const message: MessageType = {
       userId: user.userId,
       userName: user.userName,
@@ -103,6 +102,7 @@ const Messenger = ({ loginUser }: MessengerType) => {
     <MainContainer width="60vw" height="100vh">
       <Modal width="30em" />
       <Wrapper>
+        {/* 유저 프로필, 이름, 나가기 버튼 */}
         <Nav>
           <User>
             <Avatar
@@ -118,6 +118,7 @@ const Messenger = ({ loginUser }: MessengerType) => {
             onClick={handleClickLogoutBtn}
           />
         </Nav>
+        {/* 채팅 목록이 담기는 곳 */}
         <ChatContainer ref={chatContainer}>
           {messages.map((message) => (
             <Message
@@ -129,6 +130,7 @@ const Messenger = ({ loginUser }: MessengerType) => {
             />
           ))}
         </ChatContainer>
+        {/* 메세지 입력 폼 */}
         <ChatFormContainer>
           <ChatForm chatFormStyle={chatFormStyle}>
             <ChatLabel>

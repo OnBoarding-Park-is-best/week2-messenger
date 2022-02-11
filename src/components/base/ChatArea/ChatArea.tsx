@@ -41,7 +41,6 @@ const ChatArea = ({
 
   const setNewSize = (): void => {
     if (areaRef.current) {
-      console.log(areaRef.current.scrollHeight);
       areaRef.current.style.height = '1px';
       areaRef.current.style.height = areaRef.current.scrollHeight + 'px';
     }

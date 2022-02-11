@@ -34,7 +34,7 @@ const ChatArea = ({
   };
 
   const BottomFixedStyle: React.CSSProperties = {
-    position: 'absolute',
+    // position: 'absolute',
     bottom: 0,
   };
 
@@ -68,9 +68,10 @@ const ChatAreaContainer = styled.textarea`
   border: none;
   border-bottom: 1px solid #3e72f6;
   outline: 0;
-  background: white;
+  background: none;
   padding: 0;
-  font-size: 14px;
+  padding-top: 4px;
+  font-size: 16px;
   line-height: 1.5;
   color: #343434;
   &::placeholder {

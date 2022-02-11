@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootStateType } from '~store/reducers';
 import { closeModal, showModal } from '~store/actions/modal';
@@ -13,6 +13,7 @@ const useMessage = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state: RootStateType) => state.user);
   const [chatMessage, setChatMessage] = useState<string>('');
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const handleDelete = useCallback(
     (e: React.MouseEvent) => {
@@ -57,8 +58,11 @@ const useMessage = () => {
       const message: string = getOriginMessage(messageContainer.innerText);
 
       setChatMessage(
-        `${userName}에게 답장\n${ellipsisString(message)}\n(회신)\n`,
+        `${userName}에게 답장\n상대방의 말 : ${ellipsisString(
+          message,
+        )}\n\n(회신)\n`,
       );
+      inputRef.current?.focus();
     },
     [user],
   );
@@ -68,6 +72,7 @@ const useMessage = () => {
     handleReply,
     chatMessage,
     setChatMessage,
+    inputRef,
   };
 };
 

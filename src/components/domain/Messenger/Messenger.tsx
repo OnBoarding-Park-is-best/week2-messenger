@@ -28,20 +28,42 @@ const Messenger = ({ loginUser }: MessengerType) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state: RootStateType) => state.user);
   const { messages } = useSelector((state: RootStateType) => state.messages);
-  const { handleDelete, handleReply, chatMessage, setChatMessage } =
+  const { handleDelete, handleReply, chatMessage, setChatMessage, inputRef } =
     useMessage();
 
-  const [chatFormStyle, setChatFormStyle] = useState<boolean>(false);
-  // const [chatMessage, setChatMessage] = useState<string>('');
+  const [chatFormError, setChatFormError] = useState<boolean>(false);
   const chatContainer = useRef<HTMLDivElement>(null);
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setChatMessage(e.target.value);
   }, []);
 
-  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    // 제출할 때 보내는 메세지, 로그인 시에 유저 정보만 따로 업데이트 하는 게 좋을지?
+  const handleErrorEffect = useCallback(() => {
+    setChatFormError(true);
+    setTimeout(() => {
+      setChatFormError(false);
+    }, 1000);
+  }, []);
+
+  const handleBtnSubmit = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+      chatMessage === '' ? handleErrorEffect() : submitForm();
+    },
+    [user, chatMessage],
+  );
+
+  const handleUserKeyPress = useCallback(
+    (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        chatMessage === '' ? handleErrorEffect() : submitForm();
+      }
+    },
+    [user, chatMessage],
+  );
+
+  const submitForm = useCallback(() => {
     const message: MessageType = {
       userId: user.userId,
       userName: user.userName,
@@ -50,16 +72,9 @@ const Messenger = ({ loginUser }: MessengerType) => {
       content: chatMessage,
       date: new Date(),
     };
-    if (chatMessage === '') {
-      setChatFormStyle(true);
-      setTimeout(() => {
-        setChatFormStyle(false);
-      }, 1000);
-    } else {
-      dispatch(addMessage(message));
-      setChatMessage('');
-    }
-  };
+    dispatch(addMessage(message));
+    setChatMessage('');
+  }, [user, chatMessage]);
 
   // 나가기 버튼 클릭 시 로그아웃
   const handleClickLogoutBtn = useCallback(
@@ -98,6 +113,13 @@ const Messenger = ({ loginUser }: MessengerType) => {
     }
   }, [messages]);
 
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.style.height = '1px';
+      inputRef.current.style.height = inputRef.current.scrollHeight + 'px';
+    }
+  }, [chatMessage]);
+
   return (
     <MainContainer width="60vw" height="100vh">
       <Modal width="30em" />
@@ -119,6 +141,7 @@ const Messenger = ({ loginUser }: MessengerType) => {
           />
         </Nav>
         {/* 채팅 목록이 담기는 곳 */}
+
         <ChatContainer ref={chatContainer}>
           {messages.map((message) => (
             <Message
@@ -130,22 +153,26 @@ const Messenger = ({ loginUser }: MessengerType) => {
             />
           ))}
         </ChatContainer>
+
         {/* 메세지 입력 폼 */}
         <ChatFormContainer>
-          <ChatForm chatFormStyle={chatFormStyle}>
-            <ChatLabel>
+          <ChatForm chatFormError={chatFormError} onSubmit={submitForm}>
+            <ChatLabel chatFormError={chatFormError}>
               Message
               <ChatArea
-                width="100%"
-                height=""
-                name="ChatArea"
                 value={chatMessage}
-                error={false}
-                isBottom={true}
+                error={chatFormError}
+                onKeyPress={handleUserKeyPress}
                 onChange={handleChange}
+                ref={inputRef}
               />
             </ChatLabel>
-            <Icon name="send" size={36} onClick={handleSubmit} />
+            <Icon
+              name="send"
+              size={36}
+              color={chatFormError ? COLORS.ERROR_COLOR : COLORS.PRIMARY}
+              onClick={handleBtnSubmit}
+            />
           </ChatForm>
         </ChatFormContainer>
       </Wrapper>
@@ -200,37 +227,7 @@ const ChatFormContainer = styled.div`
   background: ${COLORS.WHITE};
 `;
 
-const wiggling = keyframes`
-  0% {
-    transform: rotate(0deg);
-  }
-  10%{
-    transform: rotate(10deg);
-  }
-  20%{
-    transform: rotate(-10deg);
-  }
-  30%{
-    transform: rotate(5deg);
-  }
-  40%{
-    transform: rotate(-5deg);
-  }
-  50%{
-    transform: rotate(2.5deg);
-  }
-  60%{
-    transform: rotate(-2.5deg);
-  }
-  70%{
-    transform: rotate(0deg);
-  }
-  100%{
-    transform: rotate(0deg);
-  }
-`;
-
-const ChatForm = styled.form<{ chatFormStyle: boolean }>`
+const ChatForm = styled.form<{ chatFormError: boolean }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -240,7 +237,7 @@ const ChatForm = styled.form<{ chatFormStyle: boolean }>`
   border-radius: 30px;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4);
   ${(props) =>
-    props.chatFormStyle
+    props.chatFormError
       ? css`
           border: 1px solid red;
           animation: ${wiggling} 1s;
@@ -250,14 +247,45 @@ const ChatForm = styled.form<{ chatFormStyle: boolean }>`
         `}
 `;
 
-const ChatLabel = styled.label`
+const ChatLabel = styled.label<{ chatFormError: boolean }>`
   display: flex;
   flex-direction: column;
   align-item: flex-start;
   width: 100%;
   margin: 0 10px;
   font-size: 12px;
-  color: ${COLORS.PRIMARY};
+  color: ${(props) =>
+    props.chatFormError ? COLORS.ERROR_COLOR : COLORS.PRIMARY};
+`;
+
+const wiggling = keyframes`
+  0% {
+    transform: rotate(0deg);
+  }
+  10%{
+    transform: rotate(3deg);
+  }
+  20%{
+    transform: rotate(-3deg);
+  }
+  30%{
+    transform: rotate(2deg);
+  }
+  40%{
+    transform: rotate(-2deg);
+  }
+  50%{
+    transform: rotate(1deg);
+  }
+  60%{
+    transform: rotate(-1deg);
+  }
+  70%{
+    transform: rotate(0deg);
+  }
+  100%{
+    transform: rotate(0deg);
+  }
 `;
 
 export default Messenger;

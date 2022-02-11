@@ -1,10 +1,11 @@
+import React from 'react';
 import { Send, Reply, Delete } from './IconConverter';
 import styled, { css } from 'styled-components';
 
 interface IconProps {
   name: string;
   size: number;
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 interface Icons {
   [key: string]: ({ size }: IconProps) => JSX.Element;

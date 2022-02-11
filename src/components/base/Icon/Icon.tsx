@@ -27,30 +27,19 @@ const Icon = ({ name, size, onClick }: IconProps) => {
 };
 
 const StyledIcon = styled.button<IconProps>`
+  position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 50%;
   z-index: 10;
-  ${(props) =>
-    props.name === 'send'
-      ? css`
-          width: ${props.size - 1}px;
-          height: ${props.size - 1}px;
-          &:active {
-            background-color: rgba(0, 0, 0, 0.4);
-          }
-        `
-      : css`
-          width: ${props.size + 8}px;
-          height: ${props.size + 8}px;
-          &:hover {
-            box-shadow: 1px 2px 2px rgba(0, 0, 0, 0.2);
-          }
-          &:active {
-            background-color: rgba(0, 0, 0, 0.1);
-          }
-        `}
+  overflow: hidden;
+  transition: transform 0.2s ease-in-out;
+  &:hover {
+    transform: translateY(-2px);
+  }
+  &:active {
+    opacity: 60%;
+  }
 `;
 
 export default Icon;

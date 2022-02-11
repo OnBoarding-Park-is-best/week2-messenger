@@ -119,7 +119,7 @@ const ButtonWrapper = styled.div`
     width: 50%;
     height: 100%;
     color: #3e72f6;
-    :first-child {
+    :first-of-type {
       border-right: 1px solid #c4c4c4;
     }
   }

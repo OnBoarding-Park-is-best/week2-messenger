@@ -2,15 +2,6 @@ import { v4 as uuid } from 'uuid';
 import { USER_BRADGO, USER_HYOCHOI, USER_KRUNGY } from './user';
 import type { MessageType } from '~types/index';
 
-export const INITIAL_MESSAGE: MessageType = {
-  userId: '',
-  userName: '',
-  profileImage: '',
-  messageId: '',
-  content: '',
-  date: new Date('Febrary 10, 2022 18:29:00'),
-};
-
 export const INITIAL_MESSAGES: MessageType[] = [
   {
     ...USER_BRADGO,

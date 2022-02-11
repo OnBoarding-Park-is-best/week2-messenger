@@ -34,7 +34,6 @@ const ChatArea = ({
   };
 
   const BottomFixedStyle: React.CSSProperties = {
-    // position: 'absolute',
     bottom: 0,
   };
 
@@ -56,6 +55,7 @@ const ChatArea = ({
         isBottom ? { ...ChatAreaStyle, ...BottomFixedStyle } : ChatAreaStyle
       }
       {...props}
+      required
     />
   );
 };

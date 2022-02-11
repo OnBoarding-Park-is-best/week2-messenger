@@ -1,1 +1,1 @@
-export {};
+export { dateToFormattedString, ellipsisString } from './message';

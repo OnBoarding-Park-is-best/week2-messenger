@@ -3,7 +3,7 @@ import styled from 'styled-components';
 interface InputProps {
   width: string;
   height: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange: React.ChangeEventHandler;
   name: string;
   value: string;
   error: boolean;

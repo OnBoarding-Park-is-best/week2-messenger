@@ -19,7 +19,7 @@ const Template: ComponentStory<typeof Input> = ({ error = false }) => {
       height={52}
       name="Login Input"
       value={value}
-      onChange={(e) => handleChange(e)}
+      onChange={handleChange}
       error={error}
     />
   );

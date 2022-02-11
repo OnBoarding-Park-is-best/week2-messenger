@@ -1,19 +1,65 @@
 import React, { useState, useCallback, useRef } from 'react';
+import { v4 as uuid } from 'uuid';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootStateType } from '~store/reducers';
 import { closeModal, showModal } from '~store/actions/modal';
-import { deleteMessage } from '~store/actions/message';
+import { addMessage, deleteMessage } from '~store/actions/message';
 import {
   ellipsisString,
   removeSpecialCharacters,
   getOriginMessage,
 } from '~utils/message';
+import { MessageType } from '~types/data';
 
 const useMessage = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state: RootStateType) => state.user);
   const [chatMessage, setChatMessage] = useState<string>('');
+  const [chatFormError, setChatFormError] = useState<boolean>(false);
+
   const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setChatMessage(e.target.value);
+  }, []);
+
+  const handleErrorEffect = useCallback(() => {
+    setChatFormError(true);
+    setTimeout(() => {
+      setChatFormError(false);
+    }, 1000);
+  }, []);
+
+  const handleBtnSubmit = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+      chatMessage === '' ? handleErrorEffect() : submitForm();
+    },
+    [user, chatMessage],
+  );
+
+  const handleUserKeyPress = useCallback(
+    (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        chatMessage === '' ? handleErrorEffect() : submitForm();
+      }
+    },
+    [user, chatMessage],
+  );
+
+  const submitForm = useCallback(() => {
+    const message: MessageType = {
+      userId: user.userId,
+      userName: user.userName,
+      profileImage: user.profileImage,
+      messageId: uuid(),
+      content: chatMessage,
+      date: new Date(),
+    };
+    dispatch(addMessage(message));
+    setChatMessage('');
+  }, [user, chatMessage]);
 
   const handleDelete = useCallback(
     (e: React.MouseEvent) => {
@@ -68,10 +114,14 @@ const useMessage = () => {
   );
 
   return {
+    handleChange,
+    handleBtnSubmit,
+    handleUserKeyPress,
     handleDelete,
     handleReply,
+    submitForm,
     chatMessage,
-    setChatMessage,
+    chatFormError,
     inputRef,
   };
 };

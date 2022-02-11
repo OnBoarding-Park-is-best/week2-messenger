@@ -1,13 +1,10 @@
-import React, { useRef, useCallback, useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { v4 as uuid } from 'uuid';
+import { useRef, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { RootStateType } from '~store/reducers';
-import { addMessage } from '~store/actions/message';
-import { login, logout } from '~store/actions/user';
-import { closeModal, showModal } from '~store/actions/modal';
-import { MessageType, UserType } from '~types/data';
+import { UserType } from '~types/data';
 import { AvatarSizeEnum } from '~types/components';
 import useMessage from '~hooks/useMessage';
+import useAccess from '~hooks/useAccess';
 import {
   Avatar,
   Button,
@@ -20,84 +17,33 @@ import { COLORS } from '~constants/style';
 import styled, { css, keyframes } from 'styled-components';
 
 interface MessengerType {
+  width?: string;
+  height?: string;
   loginUser: UserType;
 }
 
 // 유저를 입력받으면 로그인
-const Messenger = ({ loginUser }: MessengerType) => {
-  const dispatch = useDispatch();
+const Messenger = ({ loginUser, width, height }: MessengerType) => {
   const { user } = useSelector((state: RootStateType) => state.user);
   const { messages } = useSelector((state: RootStateType) => state.messages);
-  const { handleDelete, handleReply, chatMessage, setChatMessage, inputRef } =
-    useMessage();
+  const { handleUserLogin, handleClickLogoutBtn } = useAccess();
+  const {
+    handleChange,
+    handleBtnSubmit,
+    handleUserKeyPress,
+    handleDelete,
+    handleReply,
+    chatMessage,
+    chatFormError,
+    submitForm,
+    inputRef,
+  } = useMessage();
 
-  const [chatFormError, setChatFormError] = useState<boolean>(false);
   const chatContainer = useRef<HTMLDivElement>(null);
-
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setChatMessage(e.target.value);
-  }, []);
-
-  const handleErrorEffect = useCallback(() => {
-    setChatFormError(true);
-    setTimeout(() => {
-      setChatFormError(false);
-    }, 1000);
-  }, []);
-
-  const handleBtnSubmit = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.preventDefault();
-      chatMessage === '' ? handleErrorEffect() : submitForm();
-    },
-    [user, chatMessage],
-  );
-
-  const handleUserKeyPress = useCallback(
-    (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        chatMessage === '' ? handleErrorEffect() : submitForm();
-      }
-    },
-    [user, chatMessage],
-  );
-
-  const submitForm = useCallback(() => {
-    const message: MessageType = {
-      userId: user.userId,
-      userName: user.userName,
-      profileImage: user.profileImage,
-      messageId: uuid(),
-      content: chatMessage,
-      date: new Date(),
-    };
-    dispatch(addMessage(message));
-    setChatMessage('');
-  }, [user, chatMessage]);
-
-  // 나가기 버튼 클릭 시 로그아웃
-  const handleClickLogoutBtn = useCallback(
-    (e: React.MouseEvent) => {
-      dispatch(
-        showModal({
-          isModalOpen: true,
-          content: '정말 로그아웃 하시겠습니까?',
-          onSubmit: handleLogout,
-        }),
-      );
-    },
-    [dispatch],
-  );
-
-  const handleLogout = useCallback(() => {
-    dispatch(logout());
-    dispatch(closeModal());
-  }, [dispatch]);
 
   // 유저 정보를 받아서 로그인
   useEffect(() => {
-    dispatch(login(loginUser));
+    handleUserLogin(loginUser);
   }, []);
 
   // 메세지가 보내지면 자동 스크롤
@@ -113,6 +59,7 @@ const Messenger = ({ loginUser }: MessengerType) => {
     }
   }, [messages]);
 
+  // Chatarea의 입력량 늘어날 시 자동 크기 조절
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.style.height = '1px';
@@ -121,7 +68,7 @@ const Messenger = ({ loginUser }: MessengerType) => {
   }, [chatMessage]);
 
   return (
-    <MainContainer width="60vw" height="100vh">
+    <MainContainer width={width} height={height}>
       <Modal width="30em" />
       <Wrapper>
         {/* 유저 프로필, 이름, 나가기 버튼 */}
@@ -130,7 +77,11 @@ const Messenger = ({ loginUser }: MessengerType) => {
             <Avatar
               src={user.profileImage}
               alt="user avatar image"
-              size={AvatarSizeEnum.Medium}
+              size={
+                Number(width) > 767
+                  ? AvatarSizeEnum.Medium
+                  : AvatarSizeEnum.Small
+              }
             />
             <Title>{user.userName}의 채팅방</Title>
           </User>
@@ -153,7 +104,6 @@ const Messenger = ({ loginUser }: MessengerType) => {
             />
           ))}
         </ChatContainer>
-
         {/* 메세지 입력 폼 */}
         <ChatFormContainer>
           <ChatForm chatFormError={chatFormError} onSubmit={submitForm}>
@@ -185,6 +135,9 @@ const Wrapper = styled.div`
   width: 100%;
   height: 100%;
   padding: 16px;
+  @media screen and (max-width: 767px) {
+    padding: 0;
+  }
 `;
 
 const Nav = styled.nav`
@@ -208,12 +161,22 @@ const Title = styled.h2`
   font-size: 1.6rem;
   color: ${COLORS.PRIMARY};
   line-height: 1.46;
+  @media screen and (max-width: 767px) {
+    margin-left: 6px;
+    font-size: 1.2rem;
+  }
 `;
 
 const ChatContainer = styled.div`
-  height: 80%;
+  height: 85%;
   padding: 20px;
   overflow-y: auto;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  @media screen and (max-width: 767px) {
+    padding: 20px 0;
+  }
 `;
 
 const ChatFormContainer = styled.div`
@@ -225,6 +188,9 @@ const ChatFormContainer = styled.div`
   width: 100%;
   padding: 10px 20px 30px;
   background: ${COLORS.WHITE};
+  @media screen and (max-width: 767px) {
+    padding: 10px 0 30px;
+  }
 `;
 
 const ChatForm = styled.form<{ chatFormError: boolean }>`
@@ -245,6 +211,11 @@ const ChatForm = styled.form<{ chatFormError: boolean }>`
       : css`
           animation: none;
         `}
+  @media screen and (max-width: 767px) {
+    border: none;
+    padding: 0;
+    box-shadow: none;
+  }
 `;
 
 const ChatLabel = styled.label<{ chatFormError: boolean }>`

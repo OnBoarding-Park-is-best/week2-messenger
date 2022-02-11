@@ -27,11 +27,9 @@ const Icon = ({ name, size, onClick }: IconProps) => {
 };
 
 const StyledIcon = styled.button<IconProps>`
-  position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 10;
   overflow: hidden;
   transition: transform 0.2s ease-in-out;
   &:hover {

@@ -12,7 +12,12 @@ export default {
   title: 'domain/Message',
   component: Message,
   args: {
-    message: INITIAL_MESSAGES[1],
+    message: {
+      ...INITIAL_MESSAGES[1],
+      messageId: 'this-is-not-redux-message',
+      content:
+        '이 메시지에는 일부러 유효하지 않은 messageId를 주어 redux와 연동하지 않았습니다. 따라서 삭제하셔도 삭제 동작을 확인할 수 없습니다. 동작을 확인하시려면 "Messages" story를 확인해주세요.',
+    },
   },
 } as ComponentMeta<typeof Message>;
 

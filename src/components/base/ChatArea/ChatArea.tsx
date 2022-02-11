@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
 interface ChatAreaProps {
@@ -8,6 +8,7 @@ interface ChatAreaProps {
   value: string;
   error: boolean;
   isBottom: boolean;
+  onChange: React.ChangeEventHandler;
 }
 
 const ChatArea = ({
@@ -17,6 +18,7 @@ const ChatArea = ({
   value,
   error,
   isBottom,
+  onChange,
   ...props
 }: ChatAreaProps) => {
   const areaRef = useRef<HTMLTextAreaElement>(null);
@@ -31,38 +33,35 @@ const ChatArea = ({
     height: height,
   };
 
-  const BottomFixedStyle: React.CSSProperties | null = isBottom
-    ? {
-        position: 'absolute',
-        bottom: 0,
-      }
-    : // isBottom이 아닐때는 null 로 줘도 될까요? 혹은 type 정의에 '| null' 을 빼고 isBottom ? { ...적용할 스타일 } : {} 로 주는게 나을까요?
-      null;
+  const BottomFixedStyle: React.CSSProperties = {
+    position: 'absolute',
+    bottom: 0,
+  };
 
-  const setNewSize = (): void => {
+  const handleOnChange = useCallback(
+    (e: React.ChangeEvent) => {
+      onChange(e);
+    },
+    [onChange],
+  );
+
+  useEffect(() => {
     if (areaRef.current) {
       areaRef.current.style.height = '1px';
       areaRef.current.style.height = areaRef.current.scrollHeight + 'px';
     }
-  };
-
-  // 이 방법으로 onChange 없이 textarea의 높이를 추적하려고 했는데, [areaRef.current?.scrollHeight] 에서 높이 변화를 인식하지 못합니다.
-  // useEffect(() => {
-  //   if (areaRef.current) {
-  //     console.log(areaRef.current.scrollHeight);
-  //     areaRef.current.style.height = '1px';
-  //     areaRef.current.style.height = areaRef.current.scrollHeight + 'px';
-  //   }
-  // }, [areaRef.current?.scrollHeight]);
+  }, [value]);
 
   return (
     <ChatAreaContainer
       ref={areaRef}
       value={value}
-      onChange={() => setNewSize()}
+      onChange={handleOnChange}
       name={name}
       className={status || undefined}
-      style={{ ...ChatAreaStyle, ...BottomFixedStyle }}
+      style={
+        isBottom ? { ...ChatAreaStyle, ...BottomFixedStyle } : ChatAreaStyle
+      }
       {...props}
     />
   );

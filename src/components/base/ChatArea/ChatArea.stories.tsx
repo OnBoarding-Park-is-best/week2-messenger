@@ -1,4 +1,5 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import ChatArea from './ChatArea';
 
@@ -7,28 +8,36 @@ export default {
   component: ChatArea,
 } as ComponentMeta<typeof ChatArea>;
 
-const Template: ComponentStory<typeof ChatArea> = (args) => (
-  <Wrapper>
-    <ChatArea {...args} />
-  </Wrapper>
-);
+const Template: ComponentStory<typeof ChatArea> = ({ error = false }) => {
+  const [value, setValue] = useState<string>('');
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
+  };
+
+  return (
+    <Wrapper>
+      <ChatArea
+        width={320}
+        height={20}
+        name="ChatArea"
+        value={value}
+        isBottom={true}
+        onChange={handleChange}
+        error={error}
+      />
+    </Wrapper>
+  );
+};
 
 export const Default = Template.bind({});
 Default.args = {
-  width: 320,
-  height: 20,
-  name: 'ChatArea',
   error: false,
-  isBottom: true,
 };
 
 export const Error = Template.bind({});
 Error.args = {
-  width: 320,
-  height: 20,
-  name: 'ChatArea',
   error: true,
-  isBottom: true,
 };
 
 const Wrapper = styled.div`

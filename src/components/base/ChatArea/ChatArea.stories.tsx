@@ -18,8 +18,8 @@ const Template: ComponentStory<typeof ChatArea> = ({ error = false }) => {
   return (
     <Wrapper>
       <ChatArea
-        width={320}
-        height={20}
+        width="320px"
+        height="320px"
         name="ChatArea"
         value={value}
         isBottom={true}

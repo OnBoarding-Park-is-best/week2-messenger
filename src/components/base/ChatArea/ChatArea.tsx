@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
 interface ChatAreaProps {
-  width: number;
-  height: number;
+  width: string;
+  height: string;
   name: string;
   value: string;
   error: boolean;
@@ -38,13 +38,6 @@ const ChatArea = ({
     bottom: 0,
   };
 
-  const handleOnChange = useCallback(
-    (e: React.ChangeEvent) => {
-      onChange(e);
-    },
-    [onChange],
-  );
-
   useEffect(() => {
     if (areaRef.current) {
       areaRef.current.style.height = '1px';
@@ -56,7 +49,7 @@ const ChatArea = ({
     <ChatAreaContainer
       ref={areaRef}
       value={value}
-      onChange={handleOnChange}
+      onChange={onChange}
       name={name}
       className={status || undefined}
       style={

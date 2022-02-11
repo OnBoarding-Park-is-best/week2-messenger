@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import styled from '@emotion/styled';
 
 interface ModalProps {
@@ -20,15 +20,6 @@ const Modal = ({
   const containerStyle: React.CSSProperties = {
     width: width,
   };
-
-  const el = useMemo(() => document.createElement('div'), []);
-
-  useEffect(() => {
-    document.body.appendChild(el);
-    return () => {
-      document.body.removeChild(el);
-    };
-  }, [el]);
 
   useEffect(() => {
     if (visible) {

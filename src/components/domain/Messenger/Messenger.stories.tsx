@@ -1,6 +1,7 @@
 import { USER_BRADGO, USER_HYOCHOI, USER_KRUNGY } from '~constants/user';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import Messenger from './Messenger';
+import useAccess from '~hooks/useAccess';
 
 export default {
   title: 'domain/Messenger',
@@ -15,6 +16,9 @@ const Template: ComponentStory<typeof Messenger> = ({
   height,
   loginUser,
 }) => {
+  const { handleUserLogin } = useAccess();
+  handleUserLogin(loginUser);
+
   return (
     <Messenger width={width} height={height} loginUser={loginUser}></Messenger>
   );

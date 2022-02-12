@@ -25,7 +25,7 @@ interface MessengerType {
 const Messenger = ({ loginUser, width, height }: MessengerType) => {
   const { user } = useSelector((state: RootStateType) => state.user);
   const { messages } = useSelector((state: RootStateType) => state.messages);
-  const { handleUserLogin, handleClickLogoutBtn } = useAccess();
+  const { handleClickLogoutBtn } = useAccess();
   const {
     handleChange,
     handleBtnSubmit,
@@ -161,8 +161,30 @@ const ChatContainer = styled.div`
   height: 85%;
   padding: 20px;
   overflow-y: auto;
+  scroll-margin: 10px 0;
   ::-webkit-scrollbar {
-    display: none;
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background-color: ${COLORS.PRIMARY_SOFT};
+    border-radius: 3px;
+    border-left: 3px solid transparent;
+    border-right: 3px solid transparent;
+    box-shadow: inset 0px 0px 5px white;
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    bordder: 2px solid transparent;
+    background-color: rgba(62, 114, 246, 0.4);
+  }
+  ::-webkit-scrollbar-button {
+    width: 0;
+    height: 0;
+  }
+  ::-webkit-scrollbar-button {
+    background-color: darkblue;
+    width: 20px;
+    height: 10px;
   }
   @media screen and (max-width: 767px) {
     padding: 20px 0;

@@ -3,15 +3,25 @@ import { COLORS } from '~constants/style';
 import styled, { css } from 'styled-components';
 
 interface ButtonProps {
+  form?: string;
+  type?: 'button' | 'submit' | 'reset';
   children: ReactChild;
   contained: boolean;
-  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-const Button = ({ children, contained, onClick, ...props }: ButtonProps) => {
+const Button = ({
+  children,
+  form,
+  type = 'button',
+  contained,
+  onClick,
+  ...props
+}: ButtonProps) => {
   return (
     <StyledButton
-      type="button"
+      form={form}
+      type={type}
       contained={contained}
       onClick={onClick}
       {...props}

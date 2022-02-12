@@ -22,7 +22,6 @@ interface MessengerType {
   loginUser: UserType;
 }
 
-// 유저를 입력받으면 로그인
 const Messenger = ({ loginUser, width, height }: MessengerType) => {
   const { user } = useSelector((state: RootStateType) => state.user);
   const { messages } = useSelector((state: RootStateType) => state.messages);
@@ -33,20 +32,18 @@ const Messenger = ({ loginUser, width, height }: MessengerType) => {
     handleUserKeyPress,
     handleDelete,
     handleReply,
+    submitForm,
     chatMessage,
     chatFormError,
-    submitForm,
     inputRef,
   } = useMessage();
 
   const chatContainer = useRef<HTMLDivElement>(null);
 
-  // 유저 정보를 받아서 로그인
   useEffect(() => {
     handleUserLogin(loginUser);
   }, []);
 
-  // 메세지가 보내지면 자동 스크롤
   useEffect(() => {
     if (chatContainer) {
       chatContainer.current?.addEventListener('DOMNodeInserted', (event) => {
@@ -59,7 +56,6 @@ const Messenger = ({ loginUser, width, height }: MessengerType) => {
     }
   }, [messages]);
 
-  // Chatarea의 입력량 늘어날 시 자동 크기 조절
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.style.height = '1px';
@@ -71,7 +67,6 @@ const Messenger = ({ loginUser, width, height }: MessengerType) => {
     <MainContainer width={width} height={height}>
       <Modal width="30em" />
       <Wrapper>
-        {/* 유저 프로필, 이름, 나가기 버튼 */}
         <Nav>
           <User>
             <Avatar
@@ -91,8 +86,6 @@ const Messenger = ({ loginUser, width, height }: MessengerType) => {
             onClick={handleClickLogoutBtn}
           />
         </Nav>
-        {/* 채팅 목록이 담기는 곳 */}
-
         <ChatContainer ref={chatContainer}>
           {messages.map((message) => (
             <Message
@@ -104,7 +97,6 @@ const Messenger = ({ loginUser, width, height }: MessengerType) => {
             />
           ))}
         </ChatContainer>
-        {/* 메세지 입력 폼 */}
         <ChatFormContainer>
           <ChatForm chatFormError={chatFormError} onSubmit={submitForm}>
             <ChatLabel chatFormError={chatFormError}>
@@ -115,7 +107,7 @@ const Messenger = ({ loginUser, width, height }: MessengerType) => {
                 onKeyPress={handleUserKeyPress}
                 onChange={handleChange}
                 ref={inputRef}
-              />
+              ></ChatArea>
             </ChatLabel>
             <Icon
               name="send"
@@ -132,6 +124,8 @@ const Messenger = ({ loginUser, width, height }: MessengerType) => {
 
 const Wrapper = styled.div`
   position: relative;
+  display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
   padding: 16px;
@@ -180,9 +174,6 @@ const ChatContainer = styled.div`
 `;
 
 const ChatFormContainer = styled.div`
-  position: absolute;
-  bottom: 0;
-  left: 0;
   display: flex;
   justify-content: center;
   width: 100%;

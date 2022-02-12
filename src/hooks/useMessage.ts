@@ -102,12 +102,11 @@ const useMessage = () => {
           ? '나'
           : removeSpecialCharacters(nameContainer.innerText);
       const message: string = getOriginMessage(messageContainer.innerText);
+      const replyform = `${userName}에게 답장\n상대방의 말 : ${ellipsisString(
+        message,
+      )}\n\n(회신)\n`;
 
-      setChatMessage(
-        `${userName}에게 답장\n상대방의 말 : ${ellipsisString(
-          message,
-        )}\n\n(회신)\n`,
-      );
+      setChatMessage((prev) => replyform + prev);
       inputRef.current?.focus();
     },
     [user],

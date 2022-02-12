@@ -41,10 +41,6 @@ const Messenger = ({ loginUser, width, height }: MessengerType) => {
   const chatContainer = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    handleUserLogin(loginUser);
-  }, []);
-
-  useEffect(() => {
     if (chatContainer) {
       chatContainer.current?.addEventListener('DOMNodeInserted', (event) => {
         const target = event.currentTarget as HTMLDivElement;

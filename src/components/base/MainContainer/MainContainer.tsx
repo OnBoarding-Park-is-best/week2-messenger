@@ -25,6 +25,7 @@ interface ContainerProps {
 const Container = styled.main<ContainerProps>`
   width: ${({ size }) => size.width};
   height: ${({ size }) => size.height};
+  margin: 0 auto;
   padding: 12px;
   border-radius: 12px;
   box-shadow: 8px 42px 80px rgba(0, 0, 0, 0.1);

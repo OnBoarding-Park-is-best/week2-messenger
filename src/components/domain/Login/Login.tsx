@@ -7,7 +7,7 @@ interface LoginProps {
   src: string;
   value: string;
   onChange: React.ChangeEventHandler;
-  onSubmit: React.MouseEventHandler;
+  onSubmit: React.FormEventHandler;
   onUploadChange: React.ChangeEventHandler;
   isError: boolean;
 }
@@ -29,7 +29,7 @@ const Login = ({
   };
 
   return (
-    <LoginContainer>
+    <LoginContainer id="loginForm" onSubmit={onSubmit}>
       <Title>유저 정보 입력</Title>
       <ProfileContainer>
         <AvatarContainer>
@@ -59,7 +59,7 @@ const Login = ({
           />
           {isError && <ErrorContainer>이름을 입력해주세요.</ErrorContainer>}
           <SubmitButtonContainer>
-            <Button contained={true} onClick={onSubmit}>
+            <Button form="loginForm" type="submit" contained={true}>
               확인
             </Button>
           </SubmitButtonContainer>
@@ -69,7 +69,7 @@ const Login = ({
   );
 };
 
-const LoginContainer = styled.div`
+const LoginContainer = styled.form`
   display: flex;
   flex-direction: column;
   justify-content: space-around;

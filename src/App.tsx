@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
 import { Messenger, Login } from '~components/domain';
@@ -30,7 +30,8 @@ function App() {
     }
   };
 
-  const handleLoginSubmit = () => {
+  const handleLoginSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     const newUser = {
       userId: uuid(),
       userName: loginNameValue,

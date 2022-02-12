@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { AvatarSizeEnum } from '~types/index';
+import { COLORS } from '~constants/style';
 
 interface AvatarProps {
   src: string;
@@ -33,6 +34,7 @@ const Image = styled.img<ImageProps>`
   height: ${({ size }) => size};
   border-radius: 50%;
   object-fit: cover;
+  border: 1px solid ${COLORS.GREY};
 `;
 
 export default Avatar;

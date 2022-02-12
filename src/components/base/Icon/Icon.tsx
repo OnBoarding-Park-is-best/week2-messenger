@@ -5,10 +5,11 @@ import styled from 'styled-components';
 interface IconProps {
   name: string;
   size: number;
+  color?: string;
   onClick?: React.MouseEventHandler;
 }
 interface Icons {
-  [key: string]: ({ size }: IconProps) => JSX.Element;
+  [key: string]: ({ size, color }: IconProps) => JSX.Element;
 }
 
 const icons: Icons = {
@@ -17,11 +18,11 @@ const icons: Icons = {
   delete: Delete,
 };
 
-const Icon = ({ name, size, onClick }: IconProps) => {
+const Icon = ({ name, size, color, onClick }: IconProps) => {
   const SpecificIcon = icons[name];
   return (
     <StyledIcon name={name} size={size} onClick={onClick}>
-      <SpecificIcon name={name} size={size} />
+      <SpecificIcon name={name} size={size} color={color} />
     </StyledIcon>
   );
 };

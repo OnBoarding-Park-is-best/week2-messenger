@@ -18,11 +18,8 @@ const Template: ComponentStory<typeof ChatArea> = ({ error = false }) => {
   return (
     <Wrapper>
       <ChatArea
-        width="320px"
-        height="320px"
-        name="ChatArea"
         value={value}
-        isBottom={true}
+        onKeyPress={() => {}}
         onChange={handleChange}
         error={error}
       />

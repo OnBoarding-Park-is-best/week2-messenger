@@ -12,7 +12,19 @@ export function dateToFormattedString(date: Date): string {
   return `${yyyy}-${mm}-${dd} ${hh}:${MM}:${ss}`;
 }
 
-export function ellipsisString(str: string) {
+export function ellipsisString(str: string): string {
   if (str.length <= 10) return str;
   return `${str.substring(0, 10)}...`;
+}
+
+export function removeSpecialCharacters(str: string): string {
+  const reg = /[`~!@#$%^&*()_|+\=?;:'",.<>\{\}\[\]\\\/ ]/gim;
+  return str.replace(reg, '');
+}
+
+export function getOriginMessage(str: string): string {
+  return str
+    .split('\n')
+    .filter((text) => text !== '')
+    .pop() as string;
 }

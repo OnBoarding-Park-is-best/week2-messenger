@@ -1,28 +1,28 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import styled from '@emotion/styled';
+import { useSelector, useDispatch } from 'react-redux';
+import type { RootStateType } from '~store/reducers';
+import { closeModal } from '~store/actions/modal';
 
 interface ModalProps {
-  children: React.ReactNode;
   width: string;
-  visible: boolean;
-  onClose: React.MouseEventHandler;
-  onSubmit: React.MouseEventHandler;
 }
 
-const Modal = ({
-  children,
-  width,
-  visible,
-  onClose,
-  onSubmit,
-  ...props
-}: ModalProps) => {
+const Modal = ({ width, ...props }: ModalProps) => {
+  const { isModalOpen, content, onSubmit } = useSelector(
+    (state: RootStateType) => state.modal,
+  );
+  const dispatch = useDispatch();
   const containerStyle: React.CSSProperties = {
     width: width,
   };
 
+  const handleClose = useCallback(() => {
+    dispatch(closeModal());
+  }, [dispatch]);
+
   useEffect(() => {
-    if (visible) {
+    if (isModalOpen) {
       document.body.style.cssText = `
       position: fixed;
       top: -${window.scrollY}px;
@@ -34,23 +34,23 @@ const Modal = ({
         window.scrollTo(0, parseInt(scrollY || '0', 10) * -1);
       };
     }
-  }, [visible]);
+  }, [isModalOpen]);
 
   return (
     <>
       <ModalContainer
-        visible={visible}
+        visible={isModalOpen}
         {...props}
         style={{ ...containerStyle }}
       >
-        <ContentWrapper>{children}</ContentWrapper>
+        <ContentWrapper>{content}</ContentWrapper>
         <Divider />
         <ButtonWrapper>
           <button onClick={onSubmit}>예</button>
-          <button onClick={onClose}>아니오</button>
+          <button onClick={handleClose}>아니오</button>
         </ButtonWrapper>
       </ModalContainer>
-      <BackgroundDim onClick={onClose} visible={visible} />
+      <BackgroundDim onClick={handleClose} visible={isModalOpen} />
     </>
   );
 };

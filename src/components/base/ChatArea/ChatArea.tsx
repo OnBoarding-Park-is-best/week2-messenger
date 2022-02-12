@@ -1,89 +1,53 @@
-import { useEffect, useRef } from 'react';
+import React from 'react';
+import { COLORS } from '~constants/style';
 import styled from 'styled-components';
 
 interface ChatAreaProps {
-  width: string;
-  height: string;
-  name: string;
   value: string;
   error: boolean;
-  isBottom: boolean;
   onChange: React.ChangeEventHandler;
+  onKeyPress: React.KeyboardEventHandler;
 }
 
-const ChatArea = ({
-  width,
-  height,
-  name,
-  value,
-  error,
-  isBottom,
-  onChange,
-  ...props
-}: ChatAreaProps) => {
-  const areaRef = useRef<HTMLTextAreaElement>(null);
-  let status: string = '';
+const ChatArea = React.forwardRef<HTMLTextAreaElement, ChatAreaProps>(
+  ({ value, error, onChange, onKeyPress }, ref) => {
+    return (
+      <ChatAreaContainer
+        ref={ref}
+        value={value}
+        error={error}
+        onChange={onChange}
+        onKeyPress={onKeyPress}
+        required
+      />
+    );
+  },
+);
 
-  if (error) {
-    status = 'error';
-  }
-
-  const ChatAreaStyle: React.CSSProperties = {
-    width: width,
-    height: height,
-  };
-
-  const BottomFixedStyle: React.CSSProperties = {
-    position: 'absolute',
-    bottom: 0,
-  };
-
-  useEffect(() => {
-    if (areaRef.current) {
-      areaRef.current.style.height = '1px';
-      areaRef.current.style.height = areaRef.current.scrollHeight + 'px';
-    }
-  }, [value]);
-
-  return (
-    <ChatAreaContainer
-      ref={areaRef}
-      value={value}
-      onChange={onChange}
-      name={name}
-      className={status || undefined}
-      style={
-        isBottom ? { ...ChatAreaStyle, ...BottomFixedStyle } : ChatAreaStyle
-      }
-      {...props}
-    />
-  );
-};
-
-const ChatAreaContainer = styled.textarea`
+const ChatAreaContainer = styled.textarea<ChatAreaProps>`
   display: block;
+  width: 100%;
+  padding: 0;
+  padding-top: 4px;
+  border: none;
+  border-bottom: 1px solid
+    ${(props) => (props.error ? COLORS.ERROR_COLOR : COLORS.PRIMARY)};
+  background: none;
+  font-size: 16px;
+  color: #343434;
+  overflow-y: hidden;
+  line-height: 1.5;
   box-sizing: border-box;
   resize: none;
-  overflow-y: hidden;
-  border: none;
-  border-bottom: 1px solid #3e72f6;
   outline: 0;
-  background: white;
-  padding: 0;
-  font-size: 14px;
-  line-height: 1.5;
-  color: #343434;
   &::placeholder {
     color: #8c8c8c;
   }
   &:disabled,
   &:disabled:hover {
     cursor: not-allowed;
-    background-color: #f3f3f3;
+    background-color: ${COLORS.GREY};
     transition: none;
-  }
-  &.error {
-    border-color: #f53354;
   }
 `;
 export default ChatArea;

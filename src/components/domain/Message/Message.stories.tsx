@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { INITIAL_MESSAGES } from '~constants/index';
 import Message from './Message';
@@ -22,25 +22,12 @@ export default {
 } as ComponentMeta<typeof Message>;
 
 const Template: ComponentStory<typeof Message> = (args) => {
-  const {
-    handleClickDelete,
-    handleDelete,
-    handleReply,
-    handleClose,
-    isModalOpen,
-    modalContent,
-  } = useMessage();
+  const { handleDelete } = useMessage();
+  const handleReply = useCallback(() => {}, []);
   return (
     <>
-      <Message {...args} onReply={handleReply} onDelete={handleClickDelete} />
-      <Modal
-        width="50vw"
-        visible={isModalOpen}
-        onSubmit={handleDelete}
-        onClose={handleClose}
-      >
-        {modalContent}
-      </Modal>
+      <Message {...args} onReply={handleReply} onDelete={handleDelete} />
+      <Modal width="50vw" />
     </>
   );
 };
@@ -53,21 +40,16 @@ MyMessage.args = {
 export const OthersMessage = Template.bind({});
 
 export const Messages = () => {
-  const {
-    handleClickDelete,
-    handleDelete,
-    handleReply,
-    handleClose,
-    isModalOpen,
-    modalContent,
-  } = useMessage();
+  const { handleDelete } = useMessage();
   const { messages } = useSelector((state: RootStateType) => state.messages);
   const dispatch = useDispatch();
+  const handleReply = useCallback(() => {}, []);
+  const handleReset = useCallback(() => dispatch(initMessage()), []);
   return (
     <>
       <button
         style={{ border: '1px solid #999', padding: '0.5em 1em' }}
-        onClick={() => dispatch(initMessage())}
+        onClick={handleReset}
       >
         상태 RESET
       </button>
@@ -77,17 +59,10 @@ export const Messages = () => {
           message={message}
           me={message.userName === 'hyo-choi'}
           onReply={handleReply}
-          onDelete={handleClickDelete}
+          onDelete={handleDelete}
         />
       ))}
-      <Modal
-        width="30em"
-        visible={isModalOpen}
-        onSubmit={handleDelete}
-        onClose={handleClose}
-      >
-        {modalContent}
-      </Modal>
+      <Modal width="30em" />
     </>
   );
 };

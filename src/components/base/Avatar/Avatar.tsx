@@ -32,6 +32,7 @@ const Image = styled.img<ImageProps>`
   width: ${({ size }) => size};
   height: ${({ size }) => size};
   border-radius: 50%;
+  object-fit: cover;
 `;
 
 export default Avatar;

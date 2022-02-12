@@ -1,17 +1,31 @@
-import { useState } from 'react';
+import { useRef } from 'react';
 import styled from 'styled-components';
 import { Avatar, Button, Input } from '~components/base';
 import { AvatarSizeEnum } from '~types/index';
 
 interface LoginProps {
   src: string;
+  value: string;
+  onChange: React.ChangeEventHandler;
+  onSubmit: React.MouseEventHandler;
+  onUploadChange: React.ChangeEventHandler;
+  isError: boolean;
 }
 
-const Login = ({ src }: LoginProps) => {
-  const [userNameValue, setUserNameValue] = useState('');
+const Login = ({
+  src,
+  value,
+  onChange,
+  onSubmit,
+  onUploadChange,
+  isError,
+}: LoginProps) => {
+  const imageUploadInput = useRef<HTMLInputElement>(null);
 
-  const handleUserName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUserNameValue(e.target.value);
+  const handleImageUploadClick = () => {
+    if (imageUploadInput.current) {
+      imageUploadInput.current.click();
+    }
   };
 
   return (
@@ -20,9 +34,18 @@ const Login = ({ src }: LoginProps) => {
       <ProfileContainer>
         <AvatarContainer>
           <Avatar src={src} alt="profile picture" size={AvatarSizeEnum.Large} />
-          <Button contained={false} onClick={() => {}}>
-            프로필 사진 변경
-          </Button>
+          <ImageUploadContainer>
+            <UploadInput
+              type="file"
+              name="Avatar Image Upload"
+              accept="image/jpg, image/jpeg, image/png"
+              ref={imageUploadInput}
+              onChange={onUploadChange}
+            />
+            <Button contained={false} onClick={handleImageUploadClick}>
+              프로필 사진 변경
+            </Button>
+          </ImageUploadContainer>
         </AvatarContainer>
         <UserNameConatiner>
           <span>이름</span>
@@ -30,12 +53,13 @@ const Login = ({ src }: LoginProps) => {
             width="100%"
             height="52px"
             name="Login Input"
-            value={userNameValue}
-            onChange={handleUserName}
-            error={false}
+            value={value}
+            onChange={onChange}
+            error={isError}
           />
+          {isError && <ErrorContainer>이름을 입력해주세요.</ErrorContainer>}
           <SubmitButtonContainer>
-            <Button contained={true} onClick={() => {}}>
+            <Button contained={true} onClick={onSubmit}>
               확인
             </Button>
           </SubmitButtonContainer>
@@ -81,6 +105,14 @@ const AvatarContainer = styled.div`
   gap: 16px;
 `;
 
+const ImageUploadContainer = styled.div`
+  display: inline-block;
+`;
+
+const UploadInput = styled.input`
+  display: none;
+`;
+
 const UserNameConatiner = styled.div`
   display: flex;
   flex-direction: column;
@@ -100,5 +132,11 @@ const SubmitButtonContainer = styled.div`
   position: absolute;
   bottom: -85px;
   right: 0;
+`;
+
+const ErrorContainer = styled.div`
+  color: #f53354;
+  position: absolute;
+  bottom: -20px;
 `;
 export default Login;

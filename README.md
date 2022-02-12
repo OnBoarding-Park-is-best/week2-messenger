@@ -4,7 +4,8 @@
 ## 🚀 배포
 
 🔗 **과제물**(netlify): https://park-is-best-messenger.netlify.app/ <br>
-🔗 **Figma**: https://www.figma.com/file/dmdlBIixqcime5DQUtgeZu/week2_messenger?node-id=0%3A1
+🔗 **Figma**: https://www.figma.com/file/dmdlBIixqcime5DQUtgeZu/week2_messenger?node-id=0%3A1 <br>
+🔗 **Storybook**: https://develop--62076915c7cc31003a4fbf17.chromatic.com
 
 ## 🧑‍🤝‍🧑 팀 소개
 

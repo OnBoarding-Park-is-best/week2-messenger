@@ -131,7 +131,7 @@ const Wrapper = styled.div`
 `;
 
 const Nav = styled.nav`
-  position: sticky:
+  position: sticky;
   top: 0;
   left: 0;
   display: flex;
@@ -174,7 +174,7 @@ const ChatContainer = styled.div`
   }
   ::-webkit-scrollbar-thumb {
     border-radius: 3px;
-    bordder: 2px solid transparent;
+    border: 2px solid transparent;
     background-color: rgba(62, 114, 246, 0.4);
   }
   ::-webkit-scrollbar-button {
@@ -230,7 +230,7 @@ const ChatForm = styled.form<{ chatFormError: boolean }>`
 const ChatLabel = styled.label<{ chatFormError: boolean }>`
   display: flex;
   flex-direction: column;
-  align-item: flex-start;
+  align-items: flex-start;
   width: 100%;
   margin: 0 10px;
   font-size: 12px;
